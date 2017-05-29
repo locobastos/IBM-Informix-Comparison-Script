@@ -224,8 +224,4 @@ for server in list(servers_dictionnary.keys()):
 
     server_column += 1
 
-# Calcul de l'homogénéité, manipulation manuelle à faire car je n'ai pas trouvé comment faire des formules matricielles avec OpenPyXL
-ws.cell(row=1, column=server_column, value='HOMOGÉNÉITÉ')
-ws.cell(row=2, column=server_column, value='{=NB.SI(E2:AL2;INDEX(E2:AL2; EQUIV(FAUX; ESTVIDE(E2:AL2);0)))/COLONNES(E2:AL2)}')
-
 excel_file.save('resultat.xlsx')
