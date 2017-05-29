@@ -17,13 +17,13 @@ class Table:
 
     def __init__(self, database, create_statement):
         """
-        We call the Table class by giving it the database object (usefull to get the database name
+        We call the Table class by giving it the database instance (usefull to get the database name
         from the table) and the create statement.
-        :param database: The database object
+        :param database: The database instance
         :param create_statement: The create table statement
         """
 
-        # Database object
+        # Database instance
         self.database = database
 
         if "." in create_statement.split(' ', 3)[2]:
