@@ -19,7 +19,7 @@ class Database:
 
     def __init__(self, server, list):
         """
-        We call the Database class by giving it the server object (usefull to have the server name
+        We call the Database class by giving it the server object (usefull to get the server name
         from the database) and the list of the content of the tbschema formatted file.
         :param server: The server object
         :param list: The list of the tbschema content
@@ -28,7 +28,7 @@ class Database:
         # Server object
         self.server = server
 
-        # Database name
+        # Database's name
         for i in self.get_all_keyword_position_in_list('database ', list):
             self.database_name = list[i].split()[1]
 
