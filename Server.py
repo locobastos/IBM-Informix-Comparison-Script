@@ -15,7 +15,7 @@ class Server:
         :param file: The file containing the tbschema without comment nor multispace nor empty line.
         """
 
-        # Server name
+        # Server's name
         self.server_name = file.split('-')[1]
 
         # Dictionnary of databases
