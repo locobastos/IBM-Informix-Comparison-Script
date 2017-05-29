@@ -35,6 +35,7 @@ class Table:
         else:
             # Table's name
             self.table_name = create_statement.split(' ', 3)[2]
+
             # Propriétaire
             self.owner_name = create_statement.split(' ', 2)[2]
 
