@@ -2,6 +2,7 @@
 from SharedFunctions import *
 from Attribute import Attribute
 
+
 class Table:
     """
     A table is described by :
@@ -42,31 +43,26 @@ class Table:
         splitted_attributes = attributes_string.split(', ')
         self.attributes_dictionnary = {}
         for attribute in splitted_attributes:
-            self.attributes_dictionnary[self.get_attribute_name(attribute)] = Attribute(self, attribute)
+            self.attributes_dictionnary[get_attribute_name(attribute)] = Attribute(self, attribute)
 
         # The chunk
         self.chunk = create_statement.split(' in ')[1].split(' ', 1)[0]
 
         # Extent rule
         post_chunk = create_statement.split(' in ')[1].split(' ')
-        self.extent_rule = post_chunk[1] + " " + \
-                           post_chunk[2] + " " + \
-                           post_chunk[3] + " " + \
-                           post_chunk[4] + " " + \
-                           post_chunk[5] + " " + \
-                           post_chunk[6]
+        self.extent_rule = post_chunk[1] + " " + post_chunk[2] + " " + post_chunk[3] + " " + \
+            post_chunk[4] + " " + post_chunk[5] + " " + post_chunk[6]
 
         # Lock mode rule
-        self.lock_mode = post_chunk[7] + " " + \
-                         post_chunk[8] + " " + \
-                         post_chunk[9]
+        self.lock_mode = post_chunk[7] + " " + post_chunk[8] + " " + post_chunk[9]
 
-    def get_attribute_name(self, attribute):
-        """
-        Return the attribute name from the attribute definition
-        :param attribute: The attribute definition
-        :return: The attribute's name
-        """
 
-        splitted_attribute = attribute.split(' ', 2)
-        return splitted_attribute[0]
+def get_attribute_name(attribute):
+    """
+    Return the attribute name from the attribute definition
+    :param attribute: The attribute definition
+    :return: The attribute's name
+    """
+
+    splitted_attribute = attribute.split(' ', 2)
+    return splitted_attribute[0]
