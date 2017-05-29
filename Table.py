@@ -17,7 +17,7 @@ class Table:
 
     def __init__(self, database, create_statement):
         """
-        We call the Table class by giving it the database instance (usefull to get the database name
+        We create a new Table instance by giving it the database instance (usefull to get the database name
         from the table) and the create statement.
         :param database: The database instance
         :param create_statement: The create table statement

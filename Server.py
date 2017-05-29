@@ -11,7 +11,7 @@ class Server:
 
     def __init__(self, file):
         """
-        We call the Server class by giving it the file containing the formatted tbschema result.
+        We create a new Server instance by giving it the file containing the formatted tbschema result.
         :param file: The file containing the tbschema without comment nor multispace nor empty line.
         """
 

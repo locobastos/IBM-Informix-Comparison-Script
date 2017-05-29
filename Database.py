@@ -19,7 +19,7 @@ class Database:
 
     def __init__(self, server, lst):
         """
-        We call the Database class by giving it the server instance (usefull to get the server name
+        We create a new Database instance by giving it the server instance (usefull to get the server name
         from the database) and the list of the content of the tbschema formatted file.
         :param server: The server instance
         :param lst: The list of the tbschema content
