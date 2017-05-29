@@ -17,9 +17,21 @@ class Server:
 
         # Server name
         self.server_name = file.split('-')[1]
+
         # Dictionnary of databases
         self.dictionnary_databases = {}
         self.add_database_to_dictionnary(file)
+
+    def add_database_to_dictionnary(self, file):
+        """
+        Add a database into the dictionnary of the right server
+        :param file: file of the databse
+        """
+
+        database_name = file.split('-')[2]
+        if database_name not in self.dictionnary_databases:
+            self.dictionnary_databases[database_name] = Database(self,
+                                                                 self.file_content_to_list(file))
 
     def file_content_to_list(self, file):
         """
@@ -33,14 +45,3 @@ class Server:
             for line in file_alias:
                 list.append(line)
         return list
-
-    def add_database_to_dictionnary(self, file):
-        """
-        Add a database into the dictionnary of the right server
-        :param file: file of the databse
-        """
-
-        database_name = file.split('-')[2]
-        if database_name not in self.dictionnary_databases:
-            self.dictionnary_databases[database_name] = Database(self,
-                                                                 self.file_content_to_list(file))
