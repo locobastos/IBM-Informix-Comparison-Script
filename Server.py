@@ -34,6 +34,23 @@ class Server:
             self.dictionnary_databases[database_name] = Database(self,
                                                                  file_content_to_list(file))
 
+    def __eq__(self, other_server):
+        """
+        Two server instances are equal only if their dictionnary of databases are equals.
+        :param other_server: The other server instance to compare with
+        :return: True if the two servers instances are equal
+        """
+
+        equal = True
+
+        for database in list(self.dictionnary_databases.keys()):
+            db_instance = self.dictionnary_databases.get(database)
+            if not db_instance.__eq__(other_server.dictionnary_databases.get(database)):
+                equal = False
+                break
+
+        return equal
+
 
 def file_content_to_list(file):
     """

@@ -39,14 +39,14 @@ class Database:
             self.tables_dictionnary[table_name] = Table(self, lst[i][:-1])
 
         # Dictionnary of indexes
-        self.indexes_dyctionnary = {}
+        self.indexes_dictionnary = {}
         for i in get_all_keyword_position_in_list('create index ', lst):
             index_name = get_index_name(lst[i], False)
-            self.indexes_dyctionnary[index_name] = Index(self, lst[i][:-1])
+            self.indexes_dictionnary[index_name] = Index(self, lst[i][:-1])
 
         for i in get_all_keyword_position_in_list('create unique index ', lst):
             index_name = get_index_name(lst[i], True)
-            self.indexes_dyctionnary[index_name] = Index(self, lst[i][:-1])
+            self.indexes_dictionnary[index_name] = Index(self, lst[i][:-1])
 
         # Dictionnary of grants
         self.grants_dictionnary = {}
@@ -66,6 +66,49 @@ class Database:
         # for i in self.get_all_keyword_position_in_list(liste, 'create view '):
         #     view_name = self.get_views_name(list[i])
         #     self.views_dictionnary[view_name] = View(self, liste[i][:-1]))
+
+    def __eq__(self, other_database):
+        """
+        Two databases instances are equal only if all of their fields are equals.
+        :param other_database: The other database instance to compare with
+        :return: True if the two databases instances are equal
+        """
+
+        attr_equal = self.database_name == other_database.database_name
+        tbl_equal = True
+        idx_equal = True
+        grt_equal = True
+        rvk_equal = True
+
+        if attr_equal:
+            for table in list(self.tables_dictionnary.keys()):
+                tbl_instance = self.tables_dictionnary.get(table)
+                if not tbl_instance.__eq__(other_database.tables_dictionnary.get(table)):
+                    tbl_equal = False
+                    break
+
+        if attr_equal and tbl_equal:
+            for index in list(self.indexes_dictionnary.keys()):
+                idx_instance = self.indexes_dictionnary.get(index)
+                if not idx_instance.__eq__(other_database.indexes_dyctionnary.get(index)):
+                    idx_equal = False
+                    break
+
+        if attr_equal and tbl_equal and idx_equal:
+            for grant in list(self.grants_dictionnary.keys()):
+                grt_instance = self.grants_dictionnary.get(grant)
+                if not grt_instance.__eq__(other_database.grants_dyctionnary.get(grant)):
+                    grt_equal = False
+                    break
+
+        if attr_equal and tbl_equal and idx_equal and grt_equal:
+            for revoke in list(self.revokes_dictionnary.keys()):
+                rvk_instance = self.revokes_dictionnary.get(revoke)
+                if not rvk_instance.__eq__(other_database.revokes_dictionnary.get(revoke)):
+                    rvk_equal = False
+                    break
+
+        return attr_equal and tbl_equal and idx_equal and grt_equal and rvk_equal
 
 
 def get_all_keyword_position_in_list(keyword, lst):
