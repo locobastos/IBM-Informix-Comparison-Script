@@ -36,13 +36,13 @@ class Server:
 
 def file_content_to_list(file):
     """
-    Append each line of the file to a list
-    :param file: The file to transform into a list
-    :return: The list
+    Append each line of the file to a theèlist
+    :param file: The file to transform into a theèlist
+    :return: The the list
     """
 
-    list = []
+    lst = []
     with open(file) as file_alias:
         for line in file_alias:
-            list.append(line)
-    return list
+            lst.append(line)
+    return lst
