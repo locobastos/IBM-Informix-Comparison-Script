@@ -36,7 +36,7 @@ class Table:
             # Table's name
             self.table_name = create_statement.split(' ', 3)[2]
 
-            # Propriétaire
+            # Table's owner
             self.owner_name = create_statement.split(' ', 2)[2]
 
         # Dictionnary of attributes
