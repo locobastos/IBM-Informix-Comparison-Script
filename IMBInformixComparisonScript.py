@@ -69,6 +69,7 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
+            tbl_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='TABLE')
                 ws.cell(row=line_number, column=3, value=db.database_name)
@@ -110,6 +111,7 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
+            idx_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='INDEX')
                 ws.cell(row=line_number, column=2, value=idx.unique_constraint)
@@ -150,7 +152,8 @@ for server in list(servers_dictionnary.keys()):
                     found = True
                     break
 
-                    # If not found, I append a new row with my info
+            # If not found, I append a new row with my info
+            rvk_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='REVOKE')
                 ws.cell(row=line_number, column=2, value=rvk.privilege_revoked)
@@ -192,6 +195,7 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
+            grt_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='GRANT')
                 ws.cell(row=line_number, column=2, value=grt.privilege_granted)
@@ -224,4 +228,4 @@ for server in list(servers_dictionnary.keys()):
 ws.cell(row=1, column=server_column, value='HOMOGÉNÉITÉ')
 ws.cell(row=2, column=server_column, value='{=NB.SI(E2:AL2;INDEX(E2:AL2; EQUIV(FAUX; ESTVIDE(E2:AL2);0)))/COLONNES(E2:AL2)}')
 
-fichier_excel.save('resultat.xlsx')
+excel_file.save('resultat.xlsx')
