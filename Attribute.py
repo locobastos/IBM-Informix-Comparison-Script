@@ -12,8 +12,8 @@ class Attribute:
 
     def __init__(self, table, create_definition):
         """
-        We create a new Attribute instance by giving it the table instance (usefull to get the table name
-        from the attribute) and the create definition (col_name + data_type + col_definition)
+        We create a new Attribute instance by giving it the table instance (usefull to get the table
+        name from the attribute) and the create definition (col_name + data_type + col_definition)
         :param table: The table instance
         :param create_definition: The create definition
         """
