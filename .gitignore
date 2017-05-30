@@ -5,3 +5,11 @@
 .idea/IBM_Informix_Comparison_Script.iml
 .idea/vcs.xml
 .idea/inspectionProfiles/Project_Default.xml
+__pycache__/Attribute.cpython-36.pyc
+__pycache__/Database.cpython-36.pyc
+__pycache__/Index.cpython-36.pyc
+__pycache__/Grant.cpython-36.pyc
+__pycache__/Revoke.cpython-36.pyc
+__pycache__/Server.cpython-36.pyc
+__pycache__/SharedFunctions.cpython-36.pyc
+__pycache__/Table.cpython-36.pyc
