@@ -9,15 +9,16 @@ class Server:
         - It's dictionnary of databases
     """
 
-    def __init__(self, file):
+    def __init__(self, serv_name, file):
         """
         We create a new Server instance by giving it the file containing the formatted tbschema
-        result.
+        result and the name of the server.
+        :param serv_name: The name of the server.
         :param file: The file containing the tbschema without comment nor multispace nor empty line.
         """
 
         # Server's name
-        self.server_name = file.split('-')[1]
+        self.server_name = serv_name
 
         # Dictionnary of databases
         self.dictionnary_databases = {}
