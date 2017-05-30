@@ -30,7 +30,7 @@ class Database:
 
         # Database's name
         for i in get_all_keyword_position_in_list('database ', lst):
-            self.database_name = lst[i].split()[1]
+            self.database_name = lst[i].split()[1][:-1]
 
         # Dictionnary of tables
         self.tables_dictionnary = {}
