@@ -4,27 +4,25 @@ import glob
 from Server import Server
 from openpyxl.workbook.workbook import Workbook
 
+origin_folder = input("Directory : ")
+# origin_folder = "tbschema_2017_05_23"
+origin_folder_glob = glob.glob(origin_folder + "/*.txt")
 
-# origin_folder = input("Directory : ")
-origin_folder = "tbschema_2017_05_23"
-origin_folder += "/*.txt"
-origin_folder_glob = glob.glob(origin_folder)
-
-input_folder = origin_folder[:-6] + "_inputs"
+input_folder = origin_folder + "_inputs"
 if not os.path.exists(input_folder):
     os.makedirs(input_folder)
 
 servers_dictionnary = {}
 
 for origin_file in origin_folder_glob:
-    origin_file_name = origin_file[len(origin_folder[:-5])]
-    input_file_name = locals()['origin_file_name'][:-4] + "input.txt"
-    input_file = origin_folder + "_inputs" + input_file_name
+    origin_file_name = origin_file[len(origin_folder) + 1:]
+    input_file_name = locals()['origin_file_name'][:-4] + "_input.txt"
+    input_file = origin_folder + "_inputs/" + input_file_name
     prepare_tbschema_file(origin_file, input_file)
     server_name = origin_file_name.split('-')[1]
 
     if server_name not in list(servers_dictionnary.keys()):
-        servers_dictionnary[server_name] = Server(input_file)
+        servers_dictionnary[server_name] = Server(server_name, input_file)
     else:
         servers_dictionnary[server_name].add_database_to_dictionnary(input_file)
 
@@ -69,12 +67,11 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
-            tbl_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='TABLE')
                 ws.cell(row=line_number, column=3, value=db.database_name)
                 ws.cell(row=line_number, column=4, value=tbl.table_name)
-                tbl_cat_dict_key = db.database_name + "-" + tbl.table_name
+                tbl_cat_dict_key = str(len(list(tbl_cat_dict.keys()))) + "-" + db.database_name + "-" + tbl.table_name
                 tbl_cat_dict[tbl_cat_dict_key] = tbl
                 ws.cell(row=line_number, column=server_column, value=list(tbl_cat_dict.keys()).index(tbl_cat_dict_key))
                 line_number += 1
@@ -83,14 +80,17 @@ for server in list(servers_dictionnary.keys()):
             else:
                 # I check into my tbl_cat_dict if I've the same table
                 same_cat = False
+                num_cat = -1
                 for category in list(tbl_cat_dict.keys()):
                     cat = tbl_cat_dict.get(category)
+                    num_cat += 1
                     if cat.__eq__(tbl):
+                        tbl_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + tbl.table_name
                         same_cat = True
                         break
 
                 if not same_cat:
-                    tbl_cat_dict_key = db.database_name + "-" + tbl.table_name
+                    tbl_cat_dict_key = str(len(list(tbl_cat_dict.keys()))) + "-" + db.database_name + "-" + tbl.table_name
                     tbl_cat_dict[tbl_cat_dict_key] = tbl
 
                 ws.cell(row=line_number_found, column=server_column, value=list(tbl_cat_dict.keys()).index(tbl_cat_dict_key))
@@ -111,13 +111,12 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
-            idx_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='INDEX')
                 ws.cell(row=line_number, column=2, value=idx.unique_constraint)
                 ws.cell(row=line_number, column=3, value=db.database_name)
                 ws.cell(row=line_number, column=4, value=idx.index_name)
-                idx_cat_dict_key = db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
+                idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
                 idx_cat_dict[idx_cat_dict_key] = idx
                 ws.cell(row=line_number, column=server_column, value=list(idx_cat_dict.keys()).index(idx_cat_dict_key))
                 line_number += 1
@@ -126,14 +125,17 @@ for server in list(servers_dictionnary.keys()):
             else:
                 # I check into my tbl_cat_dict if I've the same table
                 same_cat = False
+                num_cat = -1
                 for category in list(idx_cat_dict.keys()):
                     cat = idx_cat_dict.get(category)
+                    num_cat += 1
                     if cat.__eq__(idx):
+                        idx_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
                         same_cat = True
                         break
 
                 if not same_cat:
-                    idx_cat_dict_key = db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
+                    idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
                     idx_cat_dict[idx_cat_dict_key] = idx
 
                 ws.cell(row=line_number_found, column=server_column, value=list(idx_cat_dict.keys()).index(idx_cat_dict_key))
@@ -153,13 +155,12 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
-            rvk_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='REVOKE')
                 ws.cell(row=line_number, column=2, value=rvk.privilege_revoked)
                 ws.cell(row=line_number, column=3, value=db.database_name)
                 ws.cell(row=line_number, column=4, value=rvk.table_revoke)
-                rvk_cat_dict_key = db.database_name + "-" + rvk.privilege_revoked + "-" + rvk.table_revoke
+                rvk_cat_dict_key = str(len(list(rvk_cat_dict.keys()))) + "-" + db.database_name + "-" + rvk.privilege_revoked + "-" + rvk.table_revoke
                 rvk_cat_dict[rvk_cat_dict_key] = rvk
                 ws.cell(row=line_number, column=server_column, value=list(rvk_cat_dict.keys()).index(rvk_cat_dict_key))
                 line_number += 1
@@ -168,14 +169,17 @@ for server in list(servers_dictionnary.keys()):
             else:
                 # I check into my tbl_cat_dict if I've the same table
                 same_cat = False
+                num_cat = -1
                 for category in list(rvk_cat_dict.keys()):
                     cat = rvk_cat_dict.get(category)
+                    num_cat += 1
                     if cat.__eq__(rvk):
+                        rvk_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + rvk.privilege_revoked + "-" + rvk.table_revoke
                         same_cat = True
                         break
 
                 if not same_cat:
-                    rvk_cat_dict_key = db.database_name + "-" + rvk.privilege_revoked + "-" + rvk.table_revoke
+                    rvk_cat_dict_key = str(len(list(rvk_cat_dict.keys()))) + "-" + db.database_name + "-" + rvk.privilege_revoked + "-" + rvk.table_revoke
                     rvk_cat_dict[rvk_cat_dict_key] = rvk
 
                 ws.cell(row=line_number_found, column=server_column, value=list(rvk_cat_dict.keys()).index(rvk_cat_dict_key))
@@ -195,13 +199,12 @@ for server in list(servers_dictionnary.keys()):
                     break
 
             # If not found, I append a new row with my info
-            grt_cat_dict_key = ""
             if not found:
                 ws.cell(row=line_number, column=1, value='GRANT')
                 ws.cell(row=line_number, column=2, value=grt.privilege_granted)
                 ws.cell(row=line_number, column=3, value=db.database_name)
                 ws.cell(row=line_number, column=4, value=grt.table_grant)
-                grt_cat_dict_key = db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
+                grt_cat_dict_key = str(len(list(grt_cat_dict.keys()))) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
                 grt_cat_dict[grt_cat_dict_key] = grt
                 ws.cell(row=line_number, column=server_column, value=list(grt_cat_dict.keys()).index(grt_cat_dict_key))
                 line_number += 1
@@ -210,14 +213,17 @@ for server in list(servers_dictionnary.keys()):
             else:
                 # I check into my tbl_cat_dict if I've the same table
                 same_cat = False
+                num_cat = -1
                 for category in list(grt_cat_dict.keys()):
                     cat = grt_cat_dict.get(category)
+                    num_cat += 1
                     if cat.__eq__(grt):
+                        grt_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
                         same_cat = True
                         break
 
                 if not same_cat:
-                    grt_cat_dict_key = db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
+                    grt_cat_dict_key = str(len(list(grt_cat_dict.keys()))) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
                     grt_cat_dict[grt_cat_dict_key] = grt
 
                 ws.cell(row=line_number_found, column=server_column, value=list(grt_cat_dict.keys()).index(grt_cat_dict_key))
