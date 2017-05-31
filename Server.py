@@ -9,7 +9,7 @@ class Server:
         - It's dictionnary of databases
     """
 
-    def __init__(self, serv_name, file):
+    def __init__(self, serv_name, database_name, file):
         """
         We create a new Server instance by giving it the file containing the formatted tbschema
         result and the name of the server.
@@ -22,15 +22,16 @@ class Server:
 
         # Dictionnary of databases
         self.dictionnary_databases = {}
-        self.add_database_to_dictionnary(file)
+        self.add_database_to_dictionnary(database_name, file)
 
-    def add_database_to_dictionnary(self, file):
+    def add_database_to_dictionnary(self, database_name, file):
         """
         Add a database into the dictionnary of the right server
+        :param database_name: the name of the database
         :param file: file of the databse
         """
 
-        database_name = file.split('-')[2]
+        database_name = database_name
         if database_name not in self.dictionnary_databases:
             self.dictionnary_databases[database_name] = Database(self,
                                                                  file_content_to_list(file))

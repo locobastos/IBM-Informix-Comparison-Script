@@ -44,4 +44,6 @@ class Attribute:
 
         return self.col_name == other_attribute.col_name \
             and self.data_type == other_attribute.data_type \
-            and self.col_definition == other_attribute.col_definition
+            and self.col_definition == other_attribute.col_definition \
+            and self.table.table_name == other_attribute.table.table_name \
+            and self.table.database.database_name == other_attribute.table.database.database_name

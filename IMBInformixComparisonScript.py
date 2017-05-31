@@ -1,10 +1,12 @@
 # coding=utf-8
+import sys
 from SharedFunctions import *
 import glob
 from Server import Server
 from openpyxl.workbook.workbook import Workbook
 
-origin_folder = input("Directory : ")
+# origin_folder = input("Directory : ")
+origin_folder = sys.argv[1]
 # origin_folder = "tbschema_2017_05_23"
 origin_folder_glob = glob.glob(origin_folder + "/*.txt")
 
@@ -20,11 +22,12 @@ for origin_file in origin_folder_glob:
     input_file = origin_folder + "_inputs/" + input_file_name
     prepare_tbschema_file(origin_file, input_file)
     server_name = origin_file_name.split('-')[1]
+    database_name = origin_file_name.split('-')[2]
 
     if server_name not in list(servers_dictionnary.keys()):
-        servers_dictionnary[server_name] = Server(server_name, input_file)
+        servers_dictionnary[server_name] = Server(server_name, database_name, input_file)
     else:
-        servers_dictionnary[server_name].add_database_to_dictionnary(input_file)
+        servers_dictionnary[server_name].add_database_to_dictionnary(database_name, input_file)
 
 
 excel_file = Workbook()
@@ -116,7 +119,7 @@ for server in list(servers_dictionnary.keys()):
                 ws.cell(row=line_number, column=2, value=idx.unique_constraint)
                 ws.cell(row=line_number, column=3, value=db.database_name)
                 ws.cell(row=line_number, column=4, value=idx.index_name)
-                idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
+                idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.index_name
                 idx_cat_dict[idx_cat_dict_key] = idx
                 ws.cell(row=line_number, column=server_column, value=list(idx_cat_dict.keys()).index(idx_cat_dict_key))
                 line_number += 1
@@ -130,12 +133,12 @@ for server in list(servers_dictionnary.keys()):
                     cat = idx_cat_dict.get(category)
                     num_cat += 1
                     if cat.__eq__(idx):
-                        idx_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
+                        idx_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + idx.index_name
                         same_cat = True
                         break
 
                 if not same_cat:
-                    idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.unique_constraint + "-" + idx.index_name
+                    idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.index_name
                     idx_cat_dict[idx_cat_dict_key] = idx
 
                 ws.cell(row=line_number_found, column=server_column, value=list(idx_cat_dict.keys()).index(idx_cat_dict_key))

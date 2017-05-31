@@ -53,4 +53,5 @@ class Revoke:
         return self.privilege_revoked == other_revoke.privilege_revoked \
             and self.user_revoked == other_revoke.user_revoked \
             and self.table_revoke == other_revoke.table_revoke \
-            and self.table_owner_revoke == other_revoke.table_owner_revoke
+            and self.table_owner_revoke == other_revoke.table_owner_revoke \
+            and self.database.database_name == other_revoke.database.database_name

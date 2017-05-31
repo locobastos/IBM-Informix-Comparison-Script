@@ -68,4 +68,5 @@ class Grant:
             and self.table_grant == other_grant.table_grant \
             and self.table_owner_grant == other_grant.table_owner_grant \
             and self.user_granted == other_grant.user_granted \
-            and self.user_alias_granted == other_grant.user_alias_granted
+            and self.user_alias_granted == other_grant.user_alias_granted \
+            and self.database.database_name == other_grant.database.database_name

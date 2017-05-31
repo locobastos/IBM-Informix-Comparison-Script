@@ -110,7 +110,8 @@ class Index:
             and self.index_owner == other_index.index_owner \
             and self.on_table == other_index.on_table \
             and self.on_table_owner == other_index.on_table_owner \
-            and self.chunk == other_index.chunk
+            and self.chunk == other_index.chunk \
+            and self.database.database_name == other_index.database.database_name
 
         if equal:
             lst_diff = set(self.attributes_list) - set(other_index.attributes_list)
