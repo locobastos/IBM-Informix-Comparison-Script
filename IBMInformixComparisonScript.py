@@ -5,9 +5,7 @@ import glob
 from Server import Server
 from openpyxl.workbook.workbook import Workbook
 
-# origin_folder = input("Directory : ")
-origin_folder = sys.argv[1]
-# origin_folder = "tbschema_2017_05_23"
+origin_folder = input("Directory : ")
 origin_folder_glob = glob.glob(origin_folder + "/*.txt")
 
 input_folder = origin_folder + "_inputs"
@@ -22,7 +20,7 @@ for origin_file in origin_folder_glob:
     input_file = origin_folder + "_inputs/" + input_file_name
     prepare_tbschema_file(origin_file, input_file)
     server_name = origin_file_name.split('-')[1]
-    database_name = origin_file_name.split('-')[2]
+    database_name = origin_file_name.split('-')[2][:-4]
 
     if server_name not in list(servers_dictionnary.keys()):
         servers_dictionnary[server_name] = Server(server_name, database_name, input_file)
@@ -53,6 +51,7 @@ for server in list(servers_dictionnary.keys()):
 
     for database in list(srv.dictionnary_databases.keys()):
         db = srv.dictionnary_databases.get(database)
+        print(db.server.server_name + "-" + db.database_name)
 
         #####
         # Tables comparison
@@ -64,7 +63,7 @@ for server in list(servers_dictionnary.keys()):
             found = False
 
             for row in ws.iter_rows(min_col=1, max_col=4):
-                if row[0].internal_value == 'TABLE' and row[2].internal_value == db.database_name and row[3].internal_value == tbl.table_name:
+                if row[0].internal_value == 'TABLE' and row[2].internal_value == tbl.database.database_name and row[3].internal_value == tbl.table_name:
                     line_number_found = row[0].row
                     found = True
                     break
@@ -72,9 +71,9 @@ for server in list(servers_dictionnary.keys()):
             # If not found, I append a new row with my info
             if not found:
                 ws.cell(row=line_number, column=1, value='TABLE')
-                ws.cell(row=line_number, column=3, value=db.database_name)
+                ws.cell(row=line_number, column=3, value=tbl.database.database_name)
                 ws.cell(row=line_number, column=4, value=tbl.table_name)
-                tbl_cat_dict_key = str(len(list(tbl_cat_dict.keys()))) + "-" + db.database_name + "-" + tbl.table_name
+                tbl_cat_dict_key = tbl.database.server.server_name + "-" + tbl.database.database_name + "-" + tbl.table_name
                 tbl_cat_dict[tbl_cat_dict_key] = tbl
                 ws.cell(row=line_number, column=server_column, value=list(tbl_cat_dict.keys()).index(tbl_cat_dict_key))
                 line_number += 1
@@ -83,17 +82,15 @@ for server in list(servers_dictionnary.keys()):
             else:
                 # I check into my tbl_cat_dict if I've the same table
                 same_cat = False
-                num_cat = -1
                 for category in list(tbl_cat_dict.keys()):
                     cat = tbl_cat_dict.get(category)
-                    num_cat += 1
                     if cat.__eq__(tbl):
-                        tbl_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + tbl.table_name
+                        tbl_cat_dict_key = cat.database.server.server_name + "-" + tbl.database.database_name + "-" + tbl.table_name
                         same_cat = True
                         break
 
                 if not same_cat:
-                    tbl_cat_dict_key = str(len(list(tbl_cat_dict.keys()))) + "-" + db.database_name + "-" + tbl.table_name
+                    tbl_cat_dict_key = tbl.database.server.server_name + "-" + tbl.database.database_name + "-" + tbl.table_name
                     tbl_cat_dict[tbl_cat_dict_key] = tbl
 
                 ws.cell(row=line_number_found, column=server_column, value=list(tbl_cat_dict.keys()).index(tbl_cat_dict_key))
@@ -119,7 +116,7 @@ for server in list(servers_dictionnary.keys()):
                 ws.cell(row=line_number, column=2, value=idx.unique_constraint)
                 ws.cell(row=line_number, column=3, value=db.database_name)
                 ws.cell(row=line_number, column=4, value=idx.index_name)
-                idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + db.database_name + "-" + idx.index_name
+                idx_cat_dict_key = str(len(list(idx_cat_dict.keys()))) + "-" + idx.database.database_name + "-" + idx.index_name
                 idx_cat_dict[idx_cat_dict_key] = idx
                 ws.cell(row=line_number, column=server_column, value=list(idx_cat_dict.keys()).index(idx_cat_dict_key))
                 line_number += 1
@@ -196,7 +193,7 @@ for server in list(servers_dictionnary.keys()):
             # I'm looking for the row where the cols A, B, C & D are already filled
             found = False
             for row in ws.iter_rows(min_col=1, max_col=4):
-                if row[0].internal_value == 'GRANT' and row[1].internal_value == grt.privilege_granted and row[2].internal_value == db.database_name and row[3].internal_value == grt.table_grant:
+                if row[0].internal_value == 'GRANT' and row[1].internal_value == grt.privilege_granted and row[2].internal_value == db.database_name and row[3].internal_value == grt.user_granted:
                     line_number_found = row[0].row
                     found = True
                     break
@@ -206,8 +203,8 @@ for server in list(servers_dictionnary.keys()):
                 ws.cell(row=line_number, column=1, value='GRANT')
                 ws.cell(row=line_number, column=2, value=grt.privilege_granted)
                 ws.cell(row=line_number, column=3, value=db.database_name)
-                ws.cell(row=line_number, column=4, value=grt.table_grant)
-                grt_cat_dict_key = str(len(list(grt_cat_dict.keys()))) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
+                ws.cell(row=line_number, column=4, value=grt.user_granted)
+                grt_cat_dict_key = str(len(list(grt_cat_dict.keys()))) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.user_granted
                 grt_cat_dict[grt_cat_dict_key] = grt
                 ws.cell(row=line_number, column=server_column, value=list(grt_cat_dict.keys()).index(grt_cat_dict_key))
                 line_number += 1
@@ -221,16 +218,16 @@ for server in list(servers_dictionnary.keys()):
                     cat = grt_cat_dict.get(category)
                     num_cat += 1
                     if cat.__eq__(grt):
-                        grt_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
+                        grt_cat_dict_key = str(num_cat) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.user_granted
                         same_cat = True
                         break
 
                 if not same_cat:
-                    grt_cat_dict_key = str(len(list(grt_cat_dict.keys()))) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.table_grant
+                    grt_cat_dict_key = str(len(list(grt_cat_dict.keys()))) + "-" + db.database_name + "-" + grt.privilege_granted + "-" + grt.user_granted
                     grt_cat_dict[grt_cat_dict_key] = grt
 
                 ws.cell(row=line_number_found, column=server_column, value=list(grt_cat_dict.keys()).index(grt_cat_dict_key))
 
     server_column += 1
 
-excel_file.save('resultat.xlsx')
+excel_file.save('resul.xlsx')
