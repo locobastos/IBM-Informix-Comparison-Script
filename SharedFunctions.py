@@ -32,6 +32,10 @@ def prepare_tbschema_file(input_file, output_file):
 
     with open(input_file) as input_file, open("temp.tmp", "w") as temp:
         for line in input_file:
+            # 0) Delete line 'Procedures stockees : cette option n'est pas encore implementee'
+            if line.startswith('Procedures'):
+                continue
+
             # 1) Delete the comment in braces
             new_line = re.sub('{[^}]+}', '', line)
 

@@ -105,17 +105,11 @@ class Index:
         :return: True if the two indexes instances are equal
         """
 
-        equal = self.index_name == other_index.index_name \
+        return self.index_name == other_index.index_name \
             and self.unique_constraint == other_index.unique_constraint \
             and self.index_owner == other_index.index_owner \
             and self.on_table == other_index.on_table \
             and self.on_table_owner == other_index.on_table_owner \
             and self.chunk == other_index.chunk \
-            and self.database.database_name == other_index.database.database_name
-
-        if equal:
-            lst_diff = set(self.attributes_list) - set(other_index.attributes_list)
-            if len(lst_diff) != 0:
-                equal = False
-
-        return equal
+            and self.database.database_name == other_index.database.database_name \
+            and self.attributes_list == other_index.attributes_list

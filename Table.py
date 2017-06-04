@@ -67,9 +67,9 @@ class Table:
         equal = self.table_name == other_table.table_name \
             and self.table_owner == other_table.table_owner \
             and self.chunk == other_table.chunk \
-            and self.extent_rule == other_table.extent_rule \
-            and self.lock_mode == other_table.lock_mode \
             and self.database.database_name == other_table.database.database_name
+            # and self.extent_rule == other_table.extent_rule \
+            # and self.lock_mode == other_table.lock_mode
 
         if equal:
             for attribute in list(self.attributes_dictionnary.keys()):

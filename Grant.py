@@ -51,10 +51,9 @@ class Grant:
             self.user_alias_granted = splitted_statement[7]
         else:
             # Example : grant connect to public
-
             self.table_grant = ""
-            self.table_owner_grant = ""
-            self.user_granted = ""
+            self.table_owner_grant = splitted_statement[1]
+            self.user_granted = splitted_statement[3][:-1]
             self.user_alias_granted = ""
 
     def __eq__(self, other_grant):
